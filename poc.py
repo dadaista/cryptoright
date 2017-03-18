@@ -6,22 +6,37 @@ with a small messagge embedded. It uses testnet and faucets.
 
 """
 
+# the lines below load
+# bitcoin lib from egg in the path
+# the egg here provided is a fork with op_return
+# implemenetation
+
+import sys
+sys.path.append("./bitcoin-2.6.11-py2.7.egg")
+
+
 
 import bitcoin as b
 
-priv = b.sha256("davide")
+priv = b.sha256("bibibi")
 pub  = b.privtopub(priv)
 addr = b.pubtoaddr(pub,111)#111 optional, generates for testnet
-print addr
+print 'addr', addr
 
 
 #check if you have any token left
 h  =b.blockr_unspent(addr)
-print h
+print 'history',h
+
+balance = sum([i['value'] for i in h])
+print 'balance', balance
+
+fee = 3000
+
 
 
 #build a get change back out
-outs = [{'value': 5000,#replace with actual value
+outs = [{'value': balance - fee,
 		 'address': addr}
 		 ]#back to faucet
 
@@ -41,7 +56,7 @@ tx=b.deserialize(tx_hex)
 tx['outs'].append({'value':0,
 				'script':op_ret})
 
-
+print "====== tx ======"
 print tx
 
 #serialize the tx
