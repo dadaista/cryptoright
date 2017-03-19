@@ -7,6 +7,16 @@ import bitcoin as btc
 fee = 3000
 
 def op_return_tx(msg, priv):
+	"""
+	Creates a Bitcoin Tx with op_return out
+	Args:
+		msg  (str): the payload for op_return
+		priv (str): the private key to sign the Tx
+
+	Return:
+		a string representation of hex format of transaction
+		signed and ready to be sent to a Bitcoin node
+	"""
 	pub  = btc.privtopub(priv)
 	addr = btc.pubtoaddr(pub,111)#111 optional, generates for testnet
 	#print 'addr', addr
@@ -36,7 +46,7 @@ def op_return_tx(msg, priv):
 	tx=btc.deserialize(tx_hex)
 
 	tx['outs'].append({'value':0,
-					'script':op_ret})
+					   'script':op_ret})
 
 	#serialize the tx
 	tx_hex = btc.serialize(tx)
