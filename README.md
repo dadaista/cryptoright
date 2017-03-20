@@ -1,4 +1,4 @@
-# cryptoright
+# Cryptoright
 Some code to use blockchains as proof-of-authorship or crypto copyright
 
 # Dependencies
