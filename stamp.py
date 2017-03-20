@@ -56,3 +56,40 @@ def op_return_tx(msg, priv):
 	return tx_hex_signed
 
 
+
+
+import argparse
+
+if __name__ == "__main__":
+	parser = argparse.ArgumentParser(description='Create or verify a stamp')
+	parser.add_argument('-b','--balance',
+						action="store_true",
+	                    help='get the balance')
+
+	parser.add_argument('-f','--file',
+						action="store",
+	                    help='file to be stamped or verified')
+
+	parser.add_argument('-c','--create',
+						action="store_true",
+	                    help='create a new stamp for file')
+
+	parser.add_argument('-p','--passphrase',
+						action="store",
+	                    help='the secret to access your private key')
+
+
+
+
+	args = parser.parse_args()
+	print args
+
+
+	if args.balance != None:
+		print get_balance()
+		exit(0)
+
+
+
+
+
