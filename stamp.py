@@ -57,16 +57,20 @@ def op_return_tx(msg, priv):
     return tx_hex_signed
 
 
-
+import os.path
 
 def ld_current_priv():
+    if not os.path.isfile(keyfile):
+        print "ERR: wallet not found. Create one with -g"
+        print "exiting, no operation"
+        exit(-1)
+
     with open(keyfile, 'r') as f:
         key = f.read()
     return key
 
-
 def generate_key(secret,testnet=111):
-    import os.path
+    
     if os.path.isfile(keyfile):
         print "ERR: another key under use. Dismiss before generate anew"
         print "exiting, no operation"
@@ -77,6 +81,7 @@ def generate_key(secret,testnet=111):
     addr = btc.pubtoaddr(pub,111 if testnet else None)#111 optional, generates for testnet
     print 'new wallet address is', addr
     print 'we are using', "testnet" if testnet else "mainnet"
+    print 'fill this address with some coins to pay fees'
 
 
     
@@ -94,6 +99,31 @@ def get_balance(addr):
     return balance
 
 
+def sign_n_send(filename,priv,addr,fee):
+    if not os.path.isfile(filename):
+        print "ERR: file not found"
+        print "exiting, no operation"
+        exit(-1)
+
+    balance = get_balance(addr)
+
+    if balance<fee:
+        print "ERR: not enough funds, refill wallet",addr
+        exit(-1)
+
+    f = open(filename,"r")
+    content = f.read()
+    hashed = btc.sha256(content)
+
+    op_return_tx(hashed,priv)
+
+    raise("not finished!!")
+
+
+
+
+
+
 
     
     
@@ -105,7 +135,7 @@ if __name__ == "__main__":
     print """ 
 CryptoRight, a tool to create a blockchain stamp.
 created by Davide Carboni (C)
-v0.1 - March 2017
+v0.1 - 2017
 
     """
     parser = argparse.ArgumentParser(description='Create or verify a stamp')
@@ -128,6 +158,11 @@ v0.1 - March 2017
                         metavar="addr",
                         help='dismiss this key and sends all funds to addr')
 
+    parser.add_argument('-fee',
+                        action="store",
+                        metavar="fee",
+                        default=3000,
+                        help='the fee for each stamp, default is 3000 satoshis')
 
 
 
@@ -151,6 +186,11 @@ v0.1 - March 2017
 
     if args.b:
         print 'balance for',addr,"=",get_balance(addr)
+        exit(0)
+
+    if args.f:
+        tid = sign_n_send(args.f,priv,addr,int(args.fee))
+        print "signed on transaction",tid
         exit(0)
 
 
