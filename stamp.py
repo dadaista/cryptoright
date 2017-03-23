@@ -4,7 +4,7 @@ sys.path.append("./bitcoin-2.6.11-py2.7.egg")
 
 import bitcoin as btc
 
-fee = 3000
+fee = 100000
 keyfile = "private_key.txt"
 
 def op_return_tx(msg, priv):
@@ -49,12 +49,25 @@ def op_return_tx(msg, priv):
     tx['outs'].append({'value':0,
                        'script':op_ret})
 
+    print "====== tx ======"
+    print tx
+
+
     #serialize the tx
     tx_hex = btc.serialize(tx)
+    print "====== tx_hex ======"
+    print tx_hex
 
     tx_hex_signed=btc.sign(tx_hex,0,priv)
+    print "====== tx signed ======"
+    print btc.deserialize(tx_hex_signed)
+
+    print "====== tx signed hex ======"
+    print tx_hex_signed
 
     return tx_hex_signed
+
+
 
 
 import os.path
@@ -113,11 +126,20 @@ def sign_n_send(filename,priv,addr,fee):
 
     f = open(filename,"r")
     content = f.read()
-    hashed = btc.sha256(content)
+    hashed = btc.sha256(content)[:16]
+    print "hash\n"
+    print hashed
+    print ""
 
-    op_return_tx(hashed,priv)
 
-    raise("not finished!!")
+    sig_tx=op_return_tx(hashed,priv)
+
+    print "transaction hex is\n"
+    print sig_tx
+    raise(Exception('not finished'))
+    tid = btc.blockr_pushtx(sig_tx, 'testnet')
+
+    return tid
 
 
 
@@ -161,7 +183,7 @@ v0.1 - 2017
     parser.add_argument('-fee',
                         action="store",
                         metavar="fee",
-                        default=3000,
+                        default=fee,
                         help='the fee for each stamp, default is 3000 satoshis')
 
 
