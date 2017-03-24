@@ -3,69 +3,10 @@ sys.path.append("./bitcoin-2.6.11-py2.7.egg")
 
 
 import bitcoin as btc
+from cryptoright import *
 
 fee = 100000
 keyfile = "private_key.txt"
-
-def op_return_tx(msg, priv):
-    """
-    Creates a Bitcoin Tx with op_return out
-    Args:
-        msg  (str): the payload for op_return
-        priv (str): the private key to sign the Tx
-
-    Return:
-        a string representation of hex format of transaction
-        signed and ready to be sent to a Bitcoin node
-    """
-    pub  = btc.privtopub(priv)
-    addr = btc.pubtoaddr(pub,111)#111 optional, generates for testnet
-    #print 'addr', addr
-    h  =btc.blockr_unspent(addr)
-    #print 'history',h
-
-    balance = sum([i['value'] for i in h])
-    #print 'balance', balance
-
-
-    #build a get change back out
-    outs = [{'value': balance - fee,
-             'address': addr}
-             ]#back to faucet
-
-
-    #create a transaction
-    tx_hex =btc.mktx(h,outs)
-
-
-
-    #create a op_return hexcode
-    op_ret =btc.mk_opreturn(msg)
-
-
-    #generate the tx dict to append the op_ret script
-    tx=btc.deserialize(tx_hex)
-
-    tx['outs'].append({'value':0,
-                       'script':op_ret})
-
-    print "====== tx ======"
-    print tx
-
-
-    #serialize the tx
-    tx_hex = btc.serialize(tx)
-    print "====== tx_hex ======"
-    print tx_hex
-
-    tx_hex_signed=btc.sign(tx_hex,0,priv)
-    print "====== tx signed ======"
-    print btc.deserialize(tx_hex_signed)
-
-    print "====== tx signed hex ======"
-    print tx_hex_signed
-
-    return tx_hex_signed
 
 
 
@@ -126,17 +67,17 @@ def sign_n_send(filename,priv,addr,fee):
 
     f = open(filename,"r")
     content = f.read()
-    hashed = btc.sha256(content)[:16]
+    hashed = btc.sha256(content)
     print "hash\n"
     print hashed
     print ""
 
 
-    sig_tx=op_return_tx(hashed,priv)
+    sig_tx=op_return_tx('sha256:'+hashed,priv)
 
     print "transaction hex is\n"
     print sig_tx
-    raise(Exception('not finished'))
+    #raise(Exception('not finished'))
     tid = btc.blockr_pushtx(sig_tx, 'testnet')
 
     return tid
