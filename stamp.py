@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 import sys
 sys.path.append("./bitcoin-2.6.11-py2.7.egg")
 
@@ -78,7 +80,8 @@ def sign_n_send(filename,priv,addr,fee):
     print "transaction hex is\n"
     print sig_tx
     #raise(Exception('not finished'))
-    tid = btc.blockr_pushtx(sig_tx, 'testnet')
+    tid = btc.pushtx(sig_tx, 'testnet', source='blockr')
+
 
     return tid
 
@@ -125,7 +128,7 @@ v0.1 - 2017
                         action="store",
                         metavar="fee",
                         default=fee,
-                        help='the fee for each stamp, default is 3000 satoshis')
+                        help='the fee for each stamp, default is 100000 satoshis')
 
 
 
