@@ -73,7 +73,7 @@ def sign_n_send(filename,priv,addr,fee):
     print ""
 
 
-    sig_tx=op_return_tx('sha256:'+hashed,priv)
+    sig_tx=op_return_tx('sha256:'+hashed[:32],priv)
 
     print "transaction hex is\n"
     print sig_tx

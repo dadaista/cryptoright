@@ -7,8 +7,8 @@ import sys
 sys.path.append("./bitcoin-2.6.11-py2.7.egg")
 import bitcoin as btc
 
-
-def op_return_tx(msg, priv, fee=100000):
+#%%
+def op_return_tx(msg, priv, fee=900000):
     """
     Creates a Bitcoin Tx with op_return out
     Args:
@@ -67,15 +67,16 @@ def op_return_tx(msg, priv, fee=100000):
     print tx_hex_signed
 
     return tx_hex_signed
-
+#%%
 if __name__ == '__main__':
     
-    priv = btc.sha256("bibibi")
+    priv = btc.sha256("dvdcrb")
     print priv
     f=open("pippo")
     msg=f.read()
 
     payload = btc.sha256(msg)[:32]
+    #payload="cribbio23"
     op_return_tx("sha256:"+payload,priv)
 
 
