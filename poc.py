@@ -11,14 +11,15 @@ with a small messagge embedded. It uses testnet and faucets.
 # the egg here provided is a fork with op_return
 # implemenetation
 
-import sys
-sys.path.append("./bitcoin-2.6.11-py2.7.egg")
+#import sys
+#sys.path.append("./bitcoin-2.6.11-py2.7.egg")
 
 
-
+#%%
 import bitcoin as b
 
-priv = b.sha256("bibibi")
+
+priv = b.sha256("baba")
 pub  = b.privtopub(priv)
 addr = b.pubtoaddr(pub,111)#111 optional, generates for testnet
 print 'addr', addr
@@ -36,38 +37,38 @@ fee = 3000
 
 
 #build a get change back out
-outs = [{'value': balance - fee,
-		 'address': addr}
-		 ]#back to faucet
+outs = [{'value': balance - fee,'address': addr}]#
 
 
-#create a transaction
+#%create a transaction
 tx_hex =b.mktx(h,outs)
 
 
 
 #create a op_return hexcode
-op_ret =b.mk_opreturn("hello world! by 0xdada157a")
+tx_opr=b.mk_opreturn("hello world! by mepppp",tx_hex)
 
 
+assert(tx_opr != tx_hex)
+
+#%%
 #generate the tx dict to append the op_ret script
-tx=b.deserialize(tx_hex)
+#tx=b.deserialize(tx_hex)
 
-tx['outs'].append({'value':0,
-				'script':op_ret})
+#tx['outs'].append({'value':0,'script':op_ret})
 
-print "====== tx ======"
-print tx
+print "====== tx_opr ======"
+print tx_opr
 
 #serialize the tx
-tx_hex = b.serialize(tx)
+#tx_hex = b.serialize(tx)
 
-print "====== tx_hex ======"
-print tx_hex
+#print "====== tx_hex ======"
+#print tx_hex
 
 
 
-tx_hex_signed=b.sign(tx_hex,0,priv)
+tx_hex_signed=b.sign(tx_opr,0,priv)
 
 
 print "====== tx signed ======"
