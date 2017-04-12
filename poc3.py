@@ -10,3 +10,23 @@ from web3 import Web3, KeepAliveRPCProvider, IPCProvider
 w=Web3(KeepAliveRPCProvider(host='localhost', port='8545'))
 
 eth=w.eth
+
+#print accounts
+#create one if empty
+print eth.accounts
+
+acc=eth.accounts[0]
+print acc
+
+
+print "balance",eth.getBalance(acc)
+
+
+
+tx=  {"from":eth.accounts[0],
+      "to":eth.accounts[1],
+      "value":10,
+      'data':w.toHex('John Doe says hello!')}
+
+eth.sendTransaction(tx)
+
