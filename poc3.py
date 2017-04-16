@@ -1,14 +1,16 @@
 #!/usr/bin/env python2
 # -*- coding: utf-8 -*-
 """
-Created on Sun Apr  9 01:28:08 2017
-
-@author: root
+Creates a ethereum transaction with a string attached
+Requires 2 accounts available and some ether
+see CREATE_PRIVATE_CHAIN.readme
+@author: davide
 """
+#%%
+from web3 import Web3, KeepAliveRPCProvider, IPCProvider, EthereumTesterProvider
+w=Web3(IPCProvider())
 
-from web3 import Web3, KeepAliveRPCProvider, IPCProvider
-w=Web3(KeepAliveRPCProvider(host='localhost', port='8545'))
-
+#w=Web3(EthereumTesterProvider())
 eth=w.eth
 
 #print accounts
@@ -19,14 +21,16 @@ acc=eth.accounts[0]
 print acc
 
 
-print "balance",eth.getBalance(acc)
+print {a:eth.getBalance(a) for a in eth.accounts}
 
-
+#%%
 
 tx=  {"from":eth.accounts[0],
       "to":eth.accounts[1],
-      "value":10,
+      "value":10000000000,
       'data':w.toHex('John Doe says hello!')}
+
+w.personal.unlockAccount(acc, "davide", 1000);
 
 eth.sendTransaction(tx)
 

@@ -1,0 +1,36 @@
+#CREATE A PRIVATE CHAIN
+#prereq
+#Install geth and mist browser
+
+
+#one shell
+geth --dev --ipcpath ~/Library/Ethereum/geth.ipc
+
+
+#another shell
+geth --dev attach
+
+
+#inside geth
+> personal.listAccounts
+[]
+> personal.newAccount("davide")
+"0xf5793cb29c019275e64324b971e20d0df8bef014"
+
+
+> miner.start()
+true
+
+
+> a=personal.listAccounts[0]
+"0xf5793cb29c019275e64324b971e20d0df8bef014"
+
+> eth.getBalance(a)
+315937500000000000000
+> eth.getBalance(a)
+365000000000000000000
+> eth.getBalance(a)
+365000000000000000000
+> eth.getBalance(a)
+379062500000000000000
+
